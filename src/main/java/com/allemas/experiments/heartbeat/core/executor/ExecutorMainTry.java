@@ -10,6 +10,11 @@ public class ExecutorMainTry {
 
         Thread t = new Thread(() -> {
             while (true) {
+                try {
+                    Thread.sleep(1_000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 System.out.println("ping");
             }
         });
@@ -18,6 +23,7 @@ public class ExecutorMainTry {
 
         try {
             if (!ex.awaitTermination(1, TimeUnit.SECONDS)) {
+                System.out.println("????????");
                 ex.shutdownNow();
             }
         } catch (InterruptedException e) {
