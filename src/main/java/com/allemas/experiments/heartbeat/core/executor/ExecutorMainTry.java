@@ -4,38 +4,45 @@ import java.util.concurrent.*;
 
 public class ExecutorMainTry {
 
-    public void schedule() {
-        ExecutorService ex = Executors.newFixedThreadPool(10);
-        Boolean test = true;
-
-        Thread t = new Thread(() -> {
-            while (true) {
-                try {
-                    Thread.sleep(1_000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                System.out.println("ping");
-            }
-        });
-
-        ex.submit(t);
-
+  public void schedule() {
+    ExecutorService ex = Executors.newFixedThreadPool(10);
+    ex.execute(() -> {
+      while (true) {
+        ;
         try {
-            if (!ex.awaitTermination(1, TimeUnit.SECONDS)) {
-                System.out.println("????????");
-                ex.shutdownNow();
-            }
+          Thread.sleep(0);
         } catch (InterruptedException e) {
-            ex.shutdownNow();
-            throw new RuntimeException(e);
+          throw new RuntimeException(e);
         }
-    }
+      }
+    });
+
+    ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2);
 
 
-    public static void main(final String[] arg) throws Exception {
-        ExecutorMainTry s = new ExecutorMainTry();
-        s.schedule();
-    }
+    executorService.scheduleAtFixedRate(() -> {
+      boolean terminated = ex.isTerminated();
+      System.out.println(terminated);
+      if (terminated == true) {
+        System.out.println("I can stop checking");
+        try {
+          throw new InterruptedException("Stopping...");
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    }, 0, 1, TimeUnit.SECONDS);
+
+    executorService.scheduleAtFixedRate(() -> {
+      System.out.println("Try to stop");
+      ex.shutdownNow();
+    }, 5, 5, TimeUnit.SECONDS);
+  }
+
+
+  public static void main(final String[] arg) throws Exception {
+    ExecutorMainTry s = new ExecutorMainTry();
+    s.schedule();
+  }
 
 }
