@@ -1,5 +1,11 @@
 package com.allemas.experiments.heartbeat.core.executor;
 
+import com.allemas.experiments.heartbeat.tasks.NaiveTask;
+import io.vertx.core.*;
+import io.vertx.core.http.HttpClientOptions;
+import io.vertx.core.http.HttpClientResponse;
+import io.vertx.core.http.HttpMethod;
+
 import java.util.concurrent.*;
 
 public class ExecutorMainTry {
@@ -41,8 +47,29 @@ public class ExecutorMainTry {
 
 
   public static void main(final String[] arg) throws Exception {
-    ExecutorMainTry s = new ExecutorMainTry();
-    s.schedule();
+
+
+    Vertx vertx = Vertx.vertx();
+    DeploymentOptions options = new DeploymentOptions().setThreadingModel(ThreadingModel.VIRTUAL_THREAD);
+    NaiveTask task = new NaiveTask();
+    task.vertx = vertx;
+    vertx.deployVerticle(task);
+
+
+    Thread.sleep(5000);
+    System.out.println("Start HTTP SERVER");
+    var options2 = new HttpClientOptions()
+      .setDefaultPort(9100);
+    var client = vertx.createHttpClient(options2);
+    client.request(HttpMethod.GET, "/")
+      .compose(req -> req.send().compose(HttpClientResponse::body))
+      .onSuccess(h -> {
+        System.out.println(h);
+      }).onFailure(t -> {
+        System.out.println(t.fillInStackTrace());
+      });
+
+
   }
 
 }
