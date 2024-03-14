@@ -1,4 +1,12 @@
-= Heartbeat
+= Theme park
+
+Theme park is an project experience don't use it in production !
+This project allow you to manipulate and orchestrate thread tasks, and teach you how implement distributed computation in java.
+
+The project is built on vert.x library and I personnaly chose reactive programming pattern on the implementation.
+The main purpose you have an interface to implement, Theme park understand it and orchestrate it.
+
+You don't have to worry about Thread parking, IO, safepoint and stop. Theme park is in charge of this.
 
 image:https://img.shields.io/badge/vert.x-4.5.1-purple.svg[link="https://vertx.io"]
 
