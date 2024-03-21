@@ -43,7 +43,7 @@ class ThreadMonitor extends Thread {
           in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
           String greeting = in.readLine();
           System.out.println("---> " + greeting);
-          if (greeting.equals("coucou?"))
+          if (greeting.equals("STOP"))
             isRunning.set(false);
         }
         System.out.println("???????");
@@ -81,6 +81,6 @@ public class SocketedPark {
     System.out.println("?");
     Socket s = new Socket("127.0.0.1", 5050);
     PrintWriter out = new PrintWriter(s.getOutputStream(), true);
-    out.println("coucou?");
+    out.println("STOP");
   }
 }
