@@ -55,19 +55,22 @@ public class ExecutorMainTry {
     task.vertx = vertx;
     vertx.deployVerticle(task);
 
-
-    Thread.sleep(5000);
     System.out.println("Start HTTP SERVER");
     var options2 = new HttpClientOptions()
       .setDefaultPort(9100);
     var client = vertx.createHttpClient(options2);
-    client.request(HttpMethod.GET, "/")
-      .compose(req -> req.send().compose(HttpClientResponse::body))
-      .onSuccess(h -> {
-        System.out.println(h);
-      }).onFailure(t -> {
-        System.out.println(t.fillInStackTrace());
-      });
+
+
+   /* vertx.setPeriodic(1000, id ->{
+      client.request(HttpMethod.GET, "/")
+        .compose(req -> req.send().compose(HttpClientResponse::body))
+        .onSuccess(h -> {
+          System.out.println(h);
+        }).onFailure(t -> {
+          System.out.println(t.fillInStackTrace());
+        });
+    });
+        */
 
 
   }

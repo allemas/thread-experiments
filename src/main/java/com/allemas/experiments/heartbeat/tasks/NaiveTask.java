@@ -20,11 +20,15 @@ public class NaiveTask implements ThemeParkTask, Verticle {
 
   @Override
   public void start(Promise<Void> promise) throws Exception {
-    this.vertx.createHttpServer().requestHandler(httpServerRequest -> {
+    var serv = this.vertx.createHttpServer().requestHandler(httpServerRequest -> {
       System.out.println(httpServerRequest.headers());
       System.out.println("ON PASSE ICI");
       httpServerRequest.response().end("OK");
     }).listen(9100);
+
+    vertx.setPeriodic(2000, id -> {
+      System.out.println("COUCOU");
+    });
 
 
   }
@@ -34,3 +38,5 @@ public class NaiveTask implements ThemeParkTask, Verticle {
 
   }
 }
+
+
